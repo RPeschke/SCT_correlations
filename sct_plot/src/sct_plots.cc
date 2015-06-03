@@ -11,6 +11,13 @@
 #include "TH2D.h"
 #include "TAxis.h"
 
+
+void Tpush_back(TArrayD& arr, double val){
+  arr.Set(arr.GetSize() + 1);
+  arr.SetAt(val, arr.GetSize() - 1);
+}
+
+
 plane_hit rotate(const  plane_hit& h, double Angle){
 
   double x = h.x*TMath::Cos(Angle) - h.y*TMath::Sin(Angle);
@@ -98,18 +105,18 @@ public:
     ++m_current;
   }
   inline void pushHit(Double_t x, Double_t y){
-   
-    m_x_points.SetAt(x, m_x_points.GetSize());
-    m_y_points.SetAt(y, m_y_points.GetSize());
-    m_id.SetAt(0, m_id.GetSize());
+    Tpush_back(m_x_points, x);
+    Tpush_back(m_y_points, y);
+    Tpush_back(m_id, 0);
 
     
   }
   inline void pushHit(Double_t x, Double_t y,Double_t ID){
     
-    m_x_points.SetAt(x, m_x_points.GetSize());
-    m_y_points.SetAt(y, m_y_points.GetSize());
-    m_id.SetAt(ID, m_id.GetSize());
+    Tpush_back(m_x_points, x);
+    Tpush_back(m_y_points, y);
+    Tpush_back(m_id, ID);
+
 
   }
   virtual Long64_t Draw(const char* options, const char* cuts = "", const char* axis = "y:x") override{
