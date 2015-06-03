@@ -40,12 +40,12 @@ public:
 private:
   class axis_vector :public axis_ref{
   public:
-    axis_vector(std::vector<double>*  axis, std::vector<double>* ID, double planeID);
+    axis_vector(TArrayD*  axis, TArrayD* ID, double planeID);
     virtual bool next() override;
     virtual double get() const override;
 
-    std::vector<double>* m_axis;
-    std::vector<double>* m_ID;
+    TArrayD* m_axis;
+    TArrayD* m_ID;
     double m_planeID = 0;
     Int_t m_curr = -1;
   };

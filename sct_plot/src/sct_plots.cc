@@ -37,7 +37,7 @@ axis_ref* plane::getY()
   return dynamic_cast<axis_ref*>(&m_y);
 }
 
-plane::axis_vector::axis_vector(std::vector<double>* axis, std::vector<double>* ID, double planeID) :m_axis(axis), m_ID(ID), m_planeID(planeID)
+plane::axis_vector::axis_vector(TArrayD* axis, TArrayD* ID, double planeID) :m_axis(axis), m_ID(ID), m_planeID(planeID)
 {
 
 }
@@ -45,20 +45,20 @@ plane::axis_vector::axis_vector(std::vector<double>* axis, std::vector<double>* 
 bool plane::axis_vector::next()
 {
   do{
-    if (++m_curr >= static_cast<Int_t>(m_ID->size()))
+    if (++m_curr >= static_cast<Int_t>(m_ID->GetSize()))
     {
       m_curr = -1;
       return false;
     }
 
-  } while ((m_ID->at(m_curr) != m_planeID));
+  } while ((m_ID->At(m_curr) != m_planeID));
 
   return true;
 }
 
 double plane::axis_vector::get() const
 {
-  return m_axis->at(m_curr);
+  return m_axis->At(m_curr);
 }
 
 
@@ -76,9 +76,9 @@ public:
   virtual void processEventEnd() {}
   virtual void fill() override final{
     m_size_x = 0, m_size_y = 0;
-    m_x_points.clear();
-    m_y_points.clear();
-    m_id.clear();
+    m_x_points.Reset();
+    m_y_points.Reset();
+    m_id.Reset();
 
     bool first = true;
     processEventStart();
@@ -98,22 +98,25 @@ public:
     ++m_current;
   }
   inline void pushHit(Double_t x, Double_t y){
-    m_x_points.push_back(x);
-    m_y_points.push_back(y);
-    m_id.push_back(0);
+   
+    m_x_points.SetAt(x, m_x_points.GetSize());
+    m_y_points.SetAt(y, m_y_points.GetSize());
+    m_id.SetAt(0, m_id.GetSize());
+
     
   }
   inline void pushHit(Double_t x, Double_t y,Double_t ID){
-    m_x_points.push_back(x);
-    m_y_points.push_back(y);
-    m_id.push_back(ID);
+    
+    m_x_points.SetAt(x, m_x_points.GetSize());
+    m_y_points.SetAt(y, m_y_points.GetSize());
+    m_id.SetAt(ID, m_id.GetSize());
 
   }
   virtual Long64_t Draw(const char* options, const char* cuts = "", const char* axis = "y:x") override{
     return m_outTree->Draw(axis, cuts, options);
   }
 
-  std::vector<double> m_x_points, m_y_points, m_id;
+  TArrayD m_x_points, m_y_points, m_id;
 
   std::shared_ptr<treeCollection_ouput> m_outTree;
   Int_t m_current = 0;
@@ -431,9 +434,9 @@ public:
   }
   virtual void ProcessEvent() = 0;
   virtual void fill() override final{
-    m_x_points.clear();
-    m_y_points.clear();
-    m_id.clear();
+    m_x_points.Reset();
+    m_y_points.Reset();
+    m_id.Reset();
     
 
     ProcessEvent();
@@ -442,23 +445,22 @@ public:
     ++m_current;
   }
   inline void pushHit(Double_t x, Double_t y){
-    m_x_points.push_back(x);
-    m_y_points.push_back(y);
-    m_id.push_back(0);
-
+    m_x_points.SetAt(x, m_x_points.GetSize());
+    m_y_points.SetAt(y, m_y_points.GetSize());
+    m_id.SetAt(0, m_id.GetSize());
   
   }
   inline void pushHit(Double_t x, Double_t y ,Double_t ID){
-    m_x_points.push_back(x);
-    m_y_points.push_back(y);
-    m_id.push_back(ID);
+    m_x_points.SetAt(x, m_x_points.GetSize());
+    m_y_points.SetAt(y, m_y_points.GetSize());
+    m_id.SetAt(ID, m_id.GetSize());
 
 
   }
 protected:
   axis_ref* m_x;
   axis_ref* m_y;
-  std::vector<double> m_x_points, m_y_points, m_id;
+  TArrayD m_x_points, m_y_points, m_id;
   S_plot_def m_plot_def;
   std::shared_ptr<treeCollection_ouput> m_outTree;
   Int_t m_current = 0;

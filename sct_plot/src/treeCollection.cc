@@ -6,83 +6,9 @@
 
 #include "sct_global.h"
 
-#ifdef _DEBUG
-
-#include "TTreeLoader.h"
 
 
 
-
-treeCollection::~treeCollection()
-{
-
-  delete m_buffer.m_ID;
-  delete m_buffer.m_x;
-  delete m_buffer.m_y;
-  if (!m_tree) return;
-  delete m_tree;
-}
-
-
-
-treeCollection::treeCollection(TTree *tree/*=0*/) :m_buffer(new std::vector<double>(), new std::vector<double>(), new std::vector<double>(),&event_nr)
-{
-  std::cout << tree->GetName() << std::endl;
-  m_tree = new Hit_extractor(tree);
-  event_nr = 0;
-  getGlobalPlotCollection()->set(tree->GetName(), &m_buffer);
-}
-
-treeCollection::treeCollection(const char *name)
-{
-  m_tree = NULL;
-  if (!getGlobalPlotCollection()->get(name, &m_buffer))
-  {
-    std::cout << "collection not found. name: \"" << name << "\"" << std::endl;
-  }
-  
-  event_nr = *(m_buffer.m_event_nr);
-}
-
-Int_t treeCollection::GetEntry(Long64_t entry)
-{
-  if (m_tree==NULL)
-  {
-    event_nr = *(m_buffer.m_event_nr);
-    return 0;
-  }
-  m_tree->GetEvent(entry);
-  m_buffer.m_x->clear();
-  m_buffer.m_y->clear();
-  m_buffer.m_ID->clear();
-  event_nr = 0;
-
-
-  for (Int_t i = 0; i < m_tree->GetNumberOfEntries(); ++i)
-  {
-    m_tree->getEntry(i);
-    m_buffer.m_x->push_back(m_tree->getX());
-    m_buffer.m_y->push_back(m_tree->getY());
-    m_buffer.m_ID->push_back(m_tree->getID());
-    
-  }
-  event_nr = m_tree->getEventNr();
-  return m_tree->GetNumberOfEntries();
-}
-
-Int_t treeCollection::GetEntries() const 
-{
-  if (m_tree==NULL)
-  {
-    return kMaxInt;
-  }
-  return m_tree->GetNumberOfEvents();
-}
-
-
-
-
-#else
 
 
 treeCollection::treeCollection(const char *name)
@@ -141,7 +67,6 @@ Int_t treeCollection::GetEntries() const
   return fChain->GetEntries();
 }
 
-#endif // _DEBUG
 
 
 
@@ -153,58 +78,9 @@ Int_t treeCollection::GetEntries() const
 
 
 
-#ifdef _DEBUG
 
 
-
-
-
-treeCollection_ouput::treeCollection_ouput(const char * name, std::vector<double>* x, std::vector<double>* y, std::vector<double>* ID, Int_t * event_nr, bool save2disk/*=true*/) :
- m_buffer(ID, x, y, event_nr), m_name(name)
-{ 
-  if (save2disk)
-  {
-    m_tree=new Hit_output(name);
-  }
-  getGlobalPlotCollection()->set(name, &m_buffer);
-}
-treeCollection_ouput::~treeCollection_ouput()
-{
-  if (m_tree)
-  {
-    delete m_tree;
-  }
-}
-
-void treeCollection_ouput::fill()
-{
-  if (!m_tree)
-  {
-    return; // nothing to do 
-  }
-  for (size_t i = 0; i < m_buffer.m_x->size();++i)
-  {
-    m_tree->set(m_buffer.m_x->at(i), m_buffer.m_y->at(i), m_buffer.m_ID->at(i));
-  }
-  m_tree->setEventNR(*m_buffer.m_event_nr);
-  m_tree->fill();
-
-}
-
-Int_t treeCollection_ouput::Draw(const char* axis, const char* cuts, const char * options)
-{
-  if (!m_tree)
-  {
-    std::cout << "collection not stored: \"" << m_name << "\"" << std::endl;
-    return -1; // nothing to do 
-  }
- return m_tree->Draw(axis, cuts, options);
-}
-
-#else 
-
-
-treeCollection_ouput::treeCollection_ouput(const char * name, std::vector<double>* x, std::vector<double>* y, std::vector<double>* ID, Int_t * event_nr, bool save2disk/*=true*/) :m_buffer(ID, x, y, event_nr),m_name(name)
+treeCollection_ouput::treeCollection_ouput(const char * name, TArrayD* x, TArrayD* y, TArrayD* ID, Int_t * event_nr, bool save2disk/*=true*/) :m_buffer(ID, x, y, event_nr), m_name(name)
 {
  
   getGlobalPlotCollection()->set(name ,&m_buffer);
@@ -244,5 +120,7 @@ Int_t treeCollection_ouput::Draw(const char* axis, const char* cuts, const char 
   return m_tree->Draw(axis, cuts, options);
 }
 
+treeCollection_ouput::treeCollection_ouput(const treeCollection_ouput& tree) :m_tree(tree.m_tree), m_buffer(tree.m_buffer), m_name(tree.m_name)
+{
 
-#endif // _DEBUG
+}

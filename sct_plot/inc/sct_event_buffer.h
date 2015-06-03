@@ -4,20 +4,20 @@
 #include <vector>
 #include <map>
 #include "Rtypes.h"
-
+class TArrayD;
 
 class treeCollection;
 class treeCollection_ouput;
 class root_event{
 public:
-  root_event(std::vector<double>  *ID,
-    std::vector<double>  *x,
-    std::vector<double>  *y,
+  root_event(TArrayD  *ID,
+    TArrayD *x,
+    TArrayD  *y,
     Int_t*                event_nr);
   root_event();
-  std::vector<double>  *m_ID=nullptr;
-  std::vector<double>  *m_x=nullptr;
-  std::vector<double>  *m_y =nullptr;
+  TArrayD  *m_ID = nullptr;
+  TArrayD  *m_x = nullptr;
+  TArrayD *m_y = nullptr;
   Int_t*                m_event_nr=nullptr;
 };
 
