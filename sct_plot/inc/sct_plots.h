@@ -158,6 +158,18 @@ struct plane_hit
   Double_t x, y;
 };
 
+class DllExport s_plane_def{
+public:
+  s_plane_def(const char* name, Double_t ID);
+  const char * getName() const;
+  Double_t getID() const;
+  S_Axis getX() const;
+  S_Axis getY() const;
+};
+DllExport s_plane_collection operator+(const s_plane_def& p1, const s_plane_def& p2);
+DllExport s_plane_collection& operator+(s_plane_collection& p1, const s_plane_def& p2);
+DllExport s_plane_collection operator+(const s_plane_collection& p1, const s_plane_def& p2);
+
 
 class DllExport S_plane{
 public:
@@ -190,14 +202,15 @@ private:
 class DllExport s_plane_collection{
 public:
   s_plane_collection(){}
-  S_plane get(Int_t i);
-  S_plane get(const char* name);
-  S_plane operator()();
+  s_plane_def get(Int_t i);
+  s_plane_def get(const char* name);
+  s_plane_def operator()();
   const char* getName(Int_t i);
   void showNames() const;
   Int_t size() const;
+  void push_back(const s_plane_def& p);
 #ifndef __CINT__
-  std::vector<std::pair<std::string, S_plane>> m_planes;
+  std::vector<std::pair<std::string, s_plane_def>> m_planes;
 #endif
   ClassDef(s_plane_collection, 0);
 };
@@ -294,6 +307,7 @@ public:
   s_plane_collection addPlot(const char* PlotType, const char* name, S_plane p1, S_plane  p2);
   s_plane_collection addPlot(S_plot_def plot_def, S_plane p1, S_plane  p2);
   s_plane_collection addPlot(S_plot_def plot_def, S_plane p1);
+  s_plane_collection addPlot(S_plot_def plot_def, s_plane_collection planes);
   void Draw();
   Long64_t Draw(const char* name);
   Long64_t Draw(const char* name, const S_DrawOption& option);

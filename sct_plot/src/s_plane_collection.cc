@@ -2,18 +2,18 @@
 #include <iostream>
 
 
-S_plane s_plane_collection::get(Int_t i)
+s_plane_def s_plane_collection::get(Int_t i)
 {
   if (i< static_cast<Int_t>(m_planes.size()))
   {
     return m_planes[i].second;
   }
   std::cout << "[s_plane_collection] out of range" << std::endl;
-  return S_plane();
+  return s_plane_def("error", -10); 
 }
 
 
-S_plane s_plane_collection::get(const char* name)
+s_plane_def s_plane_collection::get(const char* name)
 {
   for (auto& e: m_planes)
   {
@@ -23,10 +23,10 @@ S_plane s_plane_collection::get(const char* name)
     
   }
   std::cout << "[s_plane_collection] unknown name = \"" << name << "\"" << std::endl;
-  return S_plane();
+  return s_plane_def("error",-10);
 
 }
-S_plane s_plane_collection::operator()()
+s_plane_def s_plane_collection::operator()()
 {
   return get(0);
 }
@@ -53,3 +53,7 @@ Int_t s_plane_collection::size() const
   return m_planes.size();
 }
 
+void s_plane_collection::push_back(const s_plane_def& p)
+{
+  m_planes.push_back(std::make_pair(std::string(p.getName()), p));
+}

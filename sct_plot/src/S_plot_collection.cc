@@ -263,3 +263,8 @@ S_plane* S_plot_collection::pushPlane(S_plane pl)
 
   return m_planes.back().get();
 }
+
+s_plane_collection S_plot_collection::addPlot(S_plot_def plot_def, s_plane_collection planes)
+{
+
+}

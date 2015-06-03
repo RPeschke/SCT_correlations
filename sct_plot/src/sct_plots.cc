@@ -823,6 +823,29 @@ plot* create_plot(const char* type, const char* name, S_plane* x, S_plane* y){
   return create_plot(S_plot_def(type, name), x, y);
 }
 
+s_plane_collection operator+(const s_plane_def& p1, const s_plane_def& p2)
+{
+  s_plane_collection ret;
+  
+  ret.push_back(p1);
+  ret.push_back(p2);
+  return ret;
+}
+
+ s_plane_collection& operator+(s_plane_collection& p1, const s_plane_def& p2)
+ {
+
+   p1.push_back(p2);
+   return p1;
+ }
+
+ DllExport s_plane_collection operator+(const s_plane_collection& p1, const s_plane_def& p2)
+ {
+   s_plane_collection ret(p1);
+   ret.push_back(p2);
+   return ret;
+ }
+
 S_Axis::S_Axis(const char* collctionName, double planeID, axis_def axis) :m_collectionName(collctionName), m_planeID(planeID), m_axis(axis)
 {
 
@@ -1018,3 +1041,7 @@ S_ZCut::S_ZCut()
 
 }
 
+s_plane_collection S_plot_collection::addPlot(S_plot_def plot_def, s_plane_collection planes)
+{
+
+}
