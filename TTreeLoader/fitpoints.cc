@@ -67,6 +67,8 @@ void fitpoints::Init(TTree *tree)
   ID = 0;
   x = 0;
   y = 0;
+  m_ampl = 0;
+  m_time = 0;
   // Set branch addresses and branch pointers
   if (!tree) return;
   fChain = tree;
@@ -76,6 +78,8 @@ void fitpoints::Init(TTree *tree)
   fChain->SetBranchAddress("ID", &ID, &b_ID);
   fChain->SetBranchAddress("x", &x, &b_x);
   fChain->SetBranchAddress("y", &y, &b_y);
+  fChain->SetBranchAddress("amp", &m_ampl, &b_ampl);
+  fChain->SetBranchAddress("time", &m_time, &b_time);
   fChain->SetBranchAddress("event_nr", &event_nr, &b_event_nr);
   Notify();
 }
@@ -163,15 +167,23 @@ Hit_output_impl::Hit_output_impl(const char* name)
   fChain->Branch("x", &m_x);
   fChain->Branch("y", &m_y);
   fChain->Branch("ID", &m_ID);
-
+  fChain->Branch("amp", &m_ampl);
+  fChain->Branch("time", &m_time);
   fChain->Branch("event_nr", &event_nr);
 }
 
 void Hit_output_impl::set(double x, double y, double id)
 {
+  set(x, y, id, 1, 1);
+}
+
+void Hit_output_impl::set(double x, double y, double id, double amp_, double time_)
+{
   m_x.push_back(x);
   m_y.push_back(y);
   m_ID.push_back(id);
+  m_ampl.push_back(amp_);
+  m_time.push_back(time_);
 }
 
 void Hit_output_impl::setEventNr(Int_t eventNR)
@@ -186,6 +198,8 @@ void Hit_output_impl::fill()
   m_ID.clear();
   m_x.clear();
   m_y.clear();
+  m_ampl.clear();
+  m_time.clear();
 }
 
 Int_t Hit_output_impl::Draw(const char* axis, const char* cuts, const char * options)

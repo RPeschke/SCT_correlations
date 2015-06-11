@@ -26,12 +26,16 @@ public:
   std::vector<double>  *ID;
   std::vector<double>  *x;
   std::vector<double>  *y;
+  std::vector<double>  *m_ampl;
+  std::vector<double>  *m_time;
   Int_t           event_nr;
 
   // List of branches
   TBranch        *b_ID;   //!
   TBranch        *b_x;   //!
   TBranch        *b_y;   //!
+  TBranch        *b_ampl;
+  TBranch        *b_time;
   TBranch        *b_event_nr;   //!
 
   fitpoints(TTree *tree = 0);
@@ -57,8 +61,11 @@ public:
   std::vector<double>  m_ID;
   std::vector<double>  m_x;
   std::vector<double>  m_y;
+  std::vector<double>  m_ampl;
+  std::vector<double>  m_time;
   Int_t           event_nr;
   void set(double x, double y, double id);
+  void set(double x, double y, double id,double amp_,double time_);
   void setEventNr(Int_t eventNR);
   void fill();
   Int_t Draw(const char* axis, const char* cuts, const char * options);

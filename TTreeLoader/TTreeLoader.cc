@@ -33,6 +33,24 @@ double Hit_extractor::getID()
   return m_hits->ID->at(m_entry);
 }
 
+double Hit_extractor::getAmp()
+{
+  if (!m_hits->m_ampl)
+  {
+    return 0;
+  }
+  return m_hits->m_ampl->at(m_entry);
+}
+
+double Hit_extractor::getTime()
+{
+  if (!m_hits->m_time)
+  {
+    return 0;
+  }
+  return m_hits->m_time->at(m_entry);
+}
+
 void Hit_extractor::getEntry(Long64_t entry)
 {
   m_entry = entry;
@@ -90,6 +108,11 @@ Hit_output::~Hit_output()
 void Hit_output::set(Double_t x, Double_t y, Double_t ID)
 {
   m_hits->set(x, y, ID);
+}
+
+void Hit_output::set(Double_t x, Double_t y, Double_t ID, Double_t ampl_, Double_t time_)
+{
+
 }
 
 void Hit_output::setEventNR(Int_t eventNr)

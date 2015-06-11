@@ -19,6 +19,8 @@ public:
   double getY();
   Int_t getEventNr();
   double getID();
+  double getAmp();
+  double getTime();
 
   void getEntry(Long64_t entry);
   Int_t GetNumberOfEntries();
@@ -40,6 +42,7 @@ public:
 
 
   void set(Double_t x,Double_t y,Double_t ID);
+  void set(Double_t x, Double_t y, Double_t ID,Double_t ampl_,Double_t time_);
   void setEventNR(Int_t eventNr);
 
   void fill();
