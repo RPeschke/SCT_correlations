@@ -29,7 +29,7 @@ public:
   static void DEVICE_2_ASIC_on_Position_7_350V(s_process_files& p, std::string path__, std::string outputPath = ".");
   static void DEVICE_2_ASIC_on_Position_7_400V(s_process_files& p, std::string path__, std::string outputPath = ".");
 
-
+  
 };
 
 #ifdef __CINT__

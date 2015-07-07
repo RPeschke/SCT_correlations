@@ -9,7 +9,7 @@ find_path(LANDAUGAUS_INCLUDE_DIR_dummy landgausFit.h
           "$ENV{LANDAUGAUS}/main/include"  
           )
 
-
+MESSAGE( STATUS "LANDAUGAUS_INCLUDE_DIR_dummy: ${LANDAUGAUS_INCLUDE_DIR_dummy}" )
   find_library(LANDAUGAUS_LIBRARY NAMES LandauGaussFit
     HINTS 
     ${PROJECT_SOURCE_DIR}/extern/LandauGaus/release/lib
