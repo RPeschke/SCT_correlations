@@ -111,7 +111,37 @@ public:
   static const char* plot_cut_x_y();
 };
 
+class s_length{
+public:
 
+  static s_length m(double lengthIn_m){ return s_length(lengthIn_m); }
+
+  double get_m()const{ return m_meter; }
+  double get_mm()const{ return m_meter*1e3; }
+  double get_um()const{ return m_meter*1e6; }
+  double get_nm()const{ return m_meter*1e9; }
+  double get_km()const{ return m_meter/1e3; }
+  double get_strips() const {   }
+private:
+  s_length(){}
+  s_length(double lengthInMeter):m_meter(lengthInMeter){
+
+  }
+  double m_meter = 0;
+};
+
+
+class s_units{
+  static s_length mm(){ return s_length::m(1e-3); }
+
+
+  static s_length nm(){ return s_length::m(1e-9); }
+  static s_length um(){ return s_length::m(1e-6); }
+  static s_length m(){ return s_length::m(1); }
+  static s_length km(){ return s_length::m(1e3); }
+  static s_length strips(){ return s_length::m(74.5e-6); }
+
+};
 class S_plot_def;
 class S_plot;
 class DllExport sct_plot{
