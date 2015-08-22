@@ -9,6 +9,120 @@
 #define  sct_corr_XML_ERROR_DEFAULT_VALUE  -666666666666
 namespace sct_corr {
 using xml_n = rapidxml::xml_node < char >;
+namespace linear_algebra {
+
+
+struct xyz_hit {
+  double x, y, z;
+
+};
+
+class Matrix_3x3 {
+public:
+  Matrix_3x3() {}
+
+  xyz_hit a1, a2, a3;
+
+};
+
+Double_t operator*(const xyz_hit& ha, const xyz_hit& hb) {
+  return ha.x*hb.x + ha.y*hb.y + ha.z*hb.z;
+}
+xyz_hit operator+(const xyz_hit& ha, const xyz_hit& hb) {
+
+  xyz_hit ret;
+  ret.x = ha.x + hb.x;
+  ret.y = ha.y + hb.y;
+  ret.z = ha.z + hb.z;
+
+  return ret;
+}
+xyz_hit operator*(const Matrix_3x3& M, const xyz_hit& hb) {
+
+  xyz_hit ret;
+  ret.x = M.a1*hb;
+  ret.y = M.a2*hb;
+  ret.z = M.a3*hb;
+  return ret;
+}
+
+Matrix_3x3 trans(const Matrix_3x3& Ma) {
+
+  Matrix_3x3 ret;
+  ret.a1.x = Ma.a1.x;
+  ret.a2.x = Ma.a1.y;
+  ret.a3.x = Ma.a1.z;
+
+  ret.a1.y = Ma.a2.x;
+  ret.a2.y = Ma.a2.y;
+  ret.a3.y = Ma.a2.z;
+
+  ret.a1.z = Ma.a3.x;
+  ret.a2.z = Ma.a3.y;
+  ret.a3.z = Ma.a3.z;
+
+  return ret;
+
+}
+Matrix_3x3 operator*(const Matrix_3x3& Ma, const Matrix_3x3& Mb) {
+
+  Matrix_3x3 ret;
+  auto MB_trans = trans(Mb);
+  ret.a1 = Ma*MB_trans.a1;
+  ret.a2 = Ma*MB_trans.a2;
+  ret.a3 = Ma*MB_trans.a3;
+
+  return trans(ret);
+}
+Matrix_3x3 operator+(const Matrix_3x3& Ma, const Matrix_3x3& Mb) {
+
+  Matrix_3x3 ret;
+  ret.a1 = Ma.a1 + Mb.a1;
+  ret.a2 = Ma.a2 + Mb.a2;
+  ret.a3 = Ma.a3 + Mb.a3;
+  return ret;
+}
+Matrix_3x3 RotX(Double_t phix) {
+
+  Matrix_3x3 ret;
+
+  ret.a1.x = 1; ret.a1.y = 0; ret.a1.z = 0;
+  ret.a2.x = 0; ret.a2.y = TMath::Cos(phix); ret.a2.z = -TMath::Sin(phix);
+  ret.a3.x = 0; ret.a3.y = TMath::Sin(phix); ret.a3.z = TMath::Cos(phix);
+
+}
+Matrix_3x3 RotX(Double_t phix) {
+
+  Matrix_3x3 ret;
+
+  ret.a1.x = 1; ret.a1.y = 0; ret.a1.z = 0;
+  ret.a2.x = 0; ret.a2.y = TMath::Cos(phix); ret.a2.z = -TMath::Sin(phix);
+  ret.a3.x = 0; ret.a3.y = TMath::Sin(phix); ret.a3.z = TMath::Cos(phix);
+  return   ret;
+}
+Matrix_3x3 RotY(Double_t phiy) {
+
+  Matrix_3x3 ret;
+
+  ret.a1.x = TMath::Cos(phiy); ret.a1.y = 0; ret.a1.z = TMath::Sin(phiy);
+  ret.a2.x = 0; ret.a2.y = 1; ret.a2.z = 0;
+  ret.a3.x = -TMath::Sin(phiy); ret.a3.y = 0; ret.a3.z = TMath::Cos(phiy);
+
+
+  return   ret;
+}
+Matrix_3x3 RotZ(Double_t phix) {
+
+  Matrix_3x3 ret;
+
+  ret.a1.x = 1; ret.a1.y = 0; ret.a1.z = 0;
+  ret.a2.x = 0; ret.a2.y = TMath::Cos(phix); ret.a2.z = -TMath::Sin(phix);
+  ret.a3.x = 0; ret.a3.y = TMath::Sin(phix); ret.a3.z = TMath::Cos(phix);
+  return   ret;
+}
+
+}
+
 struct Xladder {
 public:
   Xladder(xml_n* n):
