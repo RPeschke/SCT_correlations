@@ -207,6 +207,30 @@ public:
   Xlayer(xml_n* n) :ladder(n->first_node("ladder")), sensitive(n->first_node("sensitive")){}
   Xladder ladder;
   Xsensitive  sensitive;
+  sct_corr::linear_algebra::xyz_hit getTranslation() const {
+    sct_corr::linear_algebra::xyz_hit translation;
+    translation.x = ladder.positionX;
+    translation.y = ladder.positionY;
+    translation.z = ladder.positionZ;
+    return translation;
+  }
+  sct_corr::linear_algebra::Matrix_3x3 getRotation() const {
+    sct_corr::linear_algebra::Matrix_3x3 rot;
+
+    rot.a1.x = sensitive.rotation1; rot.a1.y = sensitive.rotation2; rot.a1.z = 0;
+    rot.a2.x = sensitive.rotation3; rot.a2.y = sensitive.rotation4; rot.a1.z = 0;
+    rot.a3.x = 0                  ; rot.a3.y = 0;                   rot.a1.z = 1;
+
+    return rot*sct_corr::linear_algebra::RotX(ladder.rotationZY / 180 * TMath::Pi())*sct_corr::linear_algebra::RotY(ladder.rotationZX / 180 * TMath::Pi())*sct_corr::linear_algebra::RotZ(ladder.rotationXY / 180 * TMath::Pi());
+  }
+  sct_corr::linear_algebra::xyz_hit local2global(const sct_corr::linear_algebra::xyz_hit &h_in) const {
+
+    auto translation = getTranslation();
+
+    auto rot = getRotation();
+
+    return rot*h_in + translation;
+  }
   static const char* NodeName() {
     return "layer";
   }
