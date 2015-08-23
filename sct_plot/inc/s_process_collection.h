@@ -15,12 +15,37 @@
 namespace sct_corr{
   class treeCollection_ouput;
   struct Xgear;
+
+  struct additionalGear {
+
+    Double_t m_rotation = 0,
+      m_pitchSize = 0.0742,
+      m_pos_x = 0,
+      m_pos_y = 0,
+      m_active_area_x_min = 0,
+      m_active_area_x_max = 0,
+      m_residual_cut = 1000;
+    Int_t m_bins, m_numOfStrips;
+    S_CutCoollection m_cuts;
+  };
 }
 
 #endif
 #include "TTree.h"
 #include "TH2.h"
+class DllExport s_process_file {
+public:
+  void setAdditionalGear(std::shared_ptr<sct_corr::additionalGear> add_gear);
+  void setOutputEvent(std::shared_ptr<sct_corr::rootEventRunOutput> outEvent);
+  
+  void process();
 
+private:
+
+  void process_begin();
+  std::shared_ptr<sct_corr::additionalGear> m_add_gear;
+  std::shared_ptr<sct_corr::rootEventRunOutput> m_outputl;
+};
 
 class DllExport s_process_collection{
 public:
@@ -56,15 +81,7 @@ public:
  
     void pushChannel(Double_t channel_x, Double_t channel_y, Double_t Effi, Double_t NumberOfEvents, Double_t Effi_error);
 
-  Double_t m_rotation = 0,
-    m_pitchSize = 0.0742,
-    m_pos_x = 0,
-    m_pos_y = 0,
-    m_active_area_x_min=0,
-    m_active_area_x_max=0,
-    m_residual_cut= 1000;
-  Int_t m_bins,m_numOfStrips;
-  S_CutCoollection m_cuts;
+  std::shared_ptr<sct_corr::additionalGear> m_add_gear;
   s_plane_collection_correlations m_output_planes;
   s_plane_collection m_res_VS_event;
   std::shared_ptr<S_plot_collection> m_plotCollection;
